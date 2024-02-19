@@ -3,7 +3,7 @@ class Klass < ApplicationRecord
   has_many :students, dependent: :destroy
 
   validates :number, :letter, :students_count, presence: true
-  validates :number, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 11 }
+  validates :number, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 11 }
   validate :validate_letter
 
   private

@@ -8,9 +8,9 @@ describe 'Klasses API', type: :request do
       let(:first_klass) { create(:klass, school: school, number: 1, letter: 'А') }
       let(:second_klass) { create(:klass, school: school, number: 2, letter: 'Б') }
       let(:third_klass) { create(:klass, school: school, number: 3, letter: 'В') }
-      let!(:students_of_class_one) { create_list(:student, 5, klass: first_klass) }
-      let!(:students_of_class_two) { create_list(:student, 10, klass: second_klass) }
-      let!(:students_of_class_three) { create_list(:student, 15, klass: third_klass) }
+      let!(:students_of_klass_one) { create_list(:student, 5, klass: first_klass) }
+      let!(:students_of_klass_two) { create_list(:student, 10, klass: second_klass) }
+      let!(:students_of_klass_three) { create_list(:student, 15, klass: third_klass) }
 
       before do
         get "/api/v1/schools/#{school.id}/klasses"

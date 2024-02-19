@@ -1,6 +1,13 @@
 module Api
   module V1
     class StudentsController < Api::V1::BaseController
+      def index
+        render json: Klass.find_by(id: params[:klass_id]).students.order(:id),
+               each_serializer: StudentsSerializer,
+               status: 200
+        
+      end
+
       def create
         student = Student.create!(student_params)
 
