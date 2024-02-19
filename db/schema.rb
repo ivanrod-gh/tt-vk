@@ -10,9 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2024_02_16_190323) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "klasses", force: :cascade do |t|
+    t.integer "number", null: false
+    t.string "letter", null: false
+    t.integer "students_count", default: 0, null: false
+    t.bigint "school_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["school_id"], name: "index_klasses_on_school_id"
+  end
+
+  create_table "schools", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "students", force: :cascade do |t|
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "sur_name", null: false
+    t.bigint "klass_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["klass_id"], name: "index_students_on_klass_id"
+  end
+
+  add_foreign_key "klasses", "schools"
+  add_foreign_key "students", "klasses"
 end

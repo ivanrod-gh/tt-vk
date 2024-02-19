@@ -19,6 +19,10 @@ module TtVk
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     
+    initializer(:remove_action_mailbox_routes, after: :add_routing_paths) { |app|
+      app.routes_reloader.paths.delete_if {|path| path =~ /actionmailbox/ }
+    }
+    
     config.generators do |g|
       g.test_framework :rspec,
                        request_specs: false,
