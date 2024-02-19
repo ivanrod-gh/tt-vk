@@ -10,6 +10,18 @@ module Api
         head :method_not_allowed
       end
 
+      def destroy
+        student = Student.find_by(id: params[:id])
+        return head :bad_request if student.nil?
+
+        return head :unauthorized if unauthorized?
+
+        student.destroy
+        head :ok
+      rescue
+        head :unauthorized
+      end
+
       private
 
       def student_params
@@ -27,6 +39,13 @@ module Api
 
       def security_token(id)
         BCrypt::Engine.hash_secret(id, BCrypt::Engine.generate_salt)
+      end
+
+      def unauthorized?
+        return true if request.headers['X-Auth-Token'].blank?
+
+        token = BCrypt::Engine.hash_secret(params[:id], request.headers['X-Auth-Token'].first(29))
+        return true if request.headers['X-Auth-Token'] != token
       end
     end
   end
