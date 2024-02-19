@@ -9,13 +9,12 @@ describe 'Answers API', type: :request do
       before do
         post "/api/v1/students/",
         params: { 
-          student: {
-            klass_id: klass.id,
-            first_name: 'имя',
-            last_name: 'фамилия',
-            sur_name: 'отчество'
-          }
-        }
+          klass_id: klass.id,
+          first_name: 'имя',
+          last_name: 'фамилия',
+          sur_name: 'отчество'
+        },
+        as: :json
       end
 
       it 'returns 201 status' do
@@ -54,6 +53,57 @@ describe 'Answers API', type: :request do
       end
     end
   end
-end
 
-        
+  describe 'DELETE /api/v1/students/:id' do
+    context 'successful' do
+      let(:student) { create(:student) }
+
+      before do
+        delete "/api/v1/students/#{student.id}",
+        headers: { "X-Auth-Token" => BCrypt::Engine.hash_secret(student.id, BCrypt::Engine.generate_salt).to_s }
+      end
+
+      it 'returns 200 status' do
+        expect(response.status).to eq 200
+      end
+
+      it 'delete a student' do
+        expect(Student.count).to eq 0
+      end
+    end
+
+    context 'invalid student id' do
+      let(:student) { create(:student) }
+
+      before do
+        delete "/api/v1/students/0",
+        headers: { "X-Auth-Token" => BCrypt::Engine.hash_secret(student.id, BCrypt::Engine.generate_salt).to_s }
+      end
+
+      it 'returns 400 status' do
+        expect(response.status).to eq 400
+      end
+
+      it 'does not delete a student' do
+        expect(Student.count).to eq 1
+      end
+    end
+
+    context 'invalid authorization' do
+      let!(:student) { create(:student) }
+
+      before do
+        delete "/api/v1/students/#{student.id}",
+        headers: { "X-Auth-Token" => '12345' }
+      end
+
+      it 'returns 401 status' do
+        expect(response.status).to eq 401
+      end
+
+      it 'does not delete a student' do
+        expect(Student.count).to eq 1
+      end
+    end
+  end
+end
