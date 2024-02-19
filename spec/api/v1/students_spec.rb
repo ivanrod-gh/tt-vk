@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Answers API', type: :request do
+describe 'Students API', type: :request do
   describe 'POST /api/v1/students/' do
 
     context 'successful' do
