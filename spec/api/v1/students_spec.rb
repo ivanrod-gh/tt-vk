@@ -1,8 +1,45 @@
 require 'rails_helper'
 
 describe 'Students API', type: :request do
-  describe 'POST /api/v1/students/' do
+  describe 'GET /api/v1/klasses/:klass_id/students' do
+    context 'successful' do
+      let(:klass) { create(:klass) }
+      let!(:student_one) do
+        create(:student, klass: klass, first_name: 'first_name1', last_name: 'last_name1', sur_name: 'sur_name1')
+      end
+      let!(:student_two) do
+        create(:student, klass: klass, first_name: 'first_name2', last_name: 'last_name2', sur_name: 'sur_name2')
+      end
+      let!(:student_three) do
+        create(:student, klass: klass, first_name: 'first_name3', last_name: 'last_name3', sur_name: 'sur_name3')
+      end
 
+      before do
+        get "/api/v1/klasses/#{klass.id}/students"
+      end
+
+      it 'returns 200 status' do
+        expect(response.status).to eq 200
+      end
+
+      it 'returns list of students' do
+        expect(json.first['id']).to eq student_one.id
+        expect(json.second['id']).to eq student_two.id
+        expect(json.third['id']).to eq student_three.id
+        expect(json.first['first_name']).to eq student_one.first_name
+        expect(json.second['first_name']).to eq student_two.first_name
+        expect(json.third['first_name']).to eq student_three.first_name
+        expect(json.first['last_name']).to eq student_one.last_name
+        expect(json.second['last_name']).to eq student_two.last_name
+        expect(json.third['last_name']).to eq student_three.last_name
+        expect(json.first['sur_name']).to eq student_one.sur_name
+        expect(json.second['sur_name']).to eq student_two.sur_name
+        expect(json.third['sur_name']).to eq student_three.sur_name
+      end
+    end
+  end
+
+  describe 'POST /api/v1/students/' do
     context 'successful' do
       let(:klass) { create(:klass) }
 
