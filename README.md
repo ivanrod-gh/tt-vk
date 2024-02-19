@@ -1,24 +1,56 @@
-# README
+Тестовое задание по [этим](https://github.com/uchiru/internship-api-schema-task) данным.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+В процессе выполнения найдено множество несоответствий задания с базовыми подходами руби и рельсов, поэтому реализовано так, как реализовано.
 
-Things you may want to cover:
+Приложение поднимается командой в терминале `docker compose up`. Работает локально.
 
-* Ruby version
+# API
 
-* System dependencies
+В этом разделе описаны основная информация по путям и запросам/ответам. Задание по ссылке выше содержит в себе спецификацию OpenAPI с более подробным описанием.
 
-* Configuration
+## Регистрация нового студента
 
-* Database creation
+`POST` на `http://localhost:3000/api/v1/students/`
 
-* Database initialization
+Запрос должен иметь заголовок `Content-Type` со значением `application/json`, тело запроса должно содержать в себе JSON с ключами `klass_id`, `first_name`, `last_name` и `sur_name` и валидными значениями этих ключей.
 
-* How to run the test suite
+Ответ будет иметь заголовок 'X-Auth-Token' со значением токена аутентификации, тело - JSON с ключами `id`, `klass_id`, `first_name`, `last_name` и `sur_name` и их значениями.
 
-* Services (job queues, cache servers, search engines, etc.)
+Статусы ответа:
+- 200 - успех,
+- 405 - переданы неверные данные.
 
-* Deployment instructions
+## Удаление студента
 
-* ...
+`DELETE` на `http://localhost:3000/api/v1/students/<:id>`
+
+Запрос должен иметь заголовок `X-Auth-Token` со значением токена аутентификации и иметь валидный `id` (student_id) в пути.
+
+Ответ будет содержать пустое тело.
+
+Статусы ответа:
+- 200 - успех,
+- 400 - некорректный запрос,
+- 401 - неверная аутентификация.
+
+## Список всех студентов класса
+
+`GET` на `http://localhost:3000/api/v1/klasses/<:klass_id>/students`
+
+Запрос должен иметь валидный `klass_id` в пути.
+
+Ответ будет содержать в себе JSON с массивом студентов. Каждый объект студента - хэш с ключами `id`, `klass_id`, `first_name`, `last_name` и `sur_name` и их значениями.
+
+Статус ответа:
+- 200 - успех.
+
+## Список всех классов школы
+
+`GET` на `http://localhost:3000/api/v1/schools/<:school_id>/klasses`
+
+Запрос должен иметь валидный `school_id` в пути.
+
+Ответ будет содержать в себе JSON с массивом классов. Каждый объект класса - хэш с ключами `id`, `school_id`, `number`, `letter` и `students_count` и их значениями.
+
+Статус ответа:
+- 200 - успех.
