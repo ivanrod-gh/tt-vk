@@ -17,6 +17,9 @@ RUN bundle config set --local without 'development test' && bundle install
 
 COPY . .
 
+RUN rm ./config/credentials.yml.enc
+RUN EDITOR=echo bin/rails credentials:edit
+
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
